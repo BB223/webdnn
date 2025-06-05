@@ -40,7 +40,8 @@ const defaultContexts = {
 
 export async function load(
   directory: string,
-  options: InitOption = {}
+  options: InitOption = {},
+  onnxBasename: string = "model.onnx"
 ): Promise<Runner> {
   const { backendOrder = ["webgl", "wasm", "cpu"], optimized } = options;
   if (optimized) {
@@ -139,6 +140,6 @@ export async function load(
   const actualBackendOrder: Backend[] =
       succeedBackend === "cpu" ? ["cpu"] : [succeedBackend, "cpu"],
     runner = new RunnerImpl(actualBackendOrder, backendContexts);
-  await runner.loadModel(directory, "model.onnx", options.progressCallback);
+  await runner.loadModel(directory, onnxBasename, options.progressCallback);
   return runner;
 }
