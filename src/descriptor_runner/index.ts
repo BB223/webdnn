@@ -29,6 +29,7 @@ export interface InitOption {
     webgpu?: WebDNNWebGPUContextOption;
   };
   progressCallback?: (loaded: number, total: number) => unknown;
+  onnxBaseName?: string;
 }
 
 const defaultContexts = {
@@ -40,8 +41,7 @@ const defaultContexts = {
 
 export async function load(
   directory: string,
-  options: InitOption = {},
-  onnxBasename: string = "model.onnx"
+  options: InitOption = {}
 ): Promise<Runner> {
   const { backendOrder = ["webgl", "wasm", "cpu"], optimized } = options;
   if (optimized) {
@@ -140,6 +140,6 @@ export async function load(
   const actualBackendOrder: Backend[] =
       succeedBackend === "cpu" ? ["cpu"] : [succeedBackend, "cpu"],
     runner = new RunnerImpl(actualBackendOrder, backendContexts);
-  await runner.loadModel(directory, onnxBasename, options.progressCallback);
+  await runner.loadModel(directory, options.onnxBaseName || "model.onnx", options.progressCallback);
   return runner;
 }
